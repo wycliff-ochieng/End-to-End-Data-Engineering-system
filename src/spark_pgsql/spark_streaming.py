@@ -11,7 +11,15 @@ def create_spark_session()->SparkSession:
     return spark
 
 def create_initial_df(SparkSession):
-    pass
+    try:
+        df = (SparkSession.readStream.format("kafka")
+        .option("kafka.bootstrap.servers","kafka:9092")
+        .option("subscribe","rappel_conso")
+        .option("startingOffset","earlist")
+        .load())
+        logging.info("Initial Dataframe created successfully")
+    except Exception as e:
+        logging.warning(f"Initial dataframe couldn't be created due to exception {e}")
 def create_final_df(df):
     pass
 def start_stream(df_parsed,spark):
