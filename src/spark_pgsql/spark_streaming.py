@@ -1,6 +1,8 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType,StructField,StringField
+from pyspark.sql.types import StructType,StructField,StringType
+from pyspark.sql.functions import col,from_json
 import logging
+from src.constants import DB_FIELDS
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s:%(funcName)s:%(levelname)s:%(message)s")
 
@@ -21,7 +23,10 @@ def create_initial_df(SparkSession):
     except Exception as e:
         logging.warning(f"Initial dataframe couldn't be created due to exception {e}")
 def create_final_df(df):
-    pass
+    schema = StructType(StructField[field_name,StringType(),True]
+    for field_name in DB_FIELDS)
+    df_out = df.selectExpr("CAST(value AS STRING)").select(from_json(col("value"),schema).alias("data")).select("data.*")
+    return df_out
 def start_stream(df_parsed,spark):
     pass
 def write_to_postgres():
