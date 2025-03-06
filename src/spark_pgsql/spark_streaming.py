@@ -28,9 +28,20 @@ def create_final_df(df):
     df_out = df.selectExpr("CAST(value AS STRING)").select(from_json(col("value"),schema).alias("data")).select("data.*")
     return df_out
 def start_stream(df_parsed,spark):
-    pass
+    existing_data_df=spark.read.jdbc(POSTGRES_URL,"rappel_conso",properties=POSTGRES_PROPERTIES)
+    unique_column = "refernce_fiche"
+    logging.info("Start streaming.......")
+    query = df_parsed.writeStream.forEachBatch(lambda batched_df,_:(
+        batched_df.join(existing_data_df[unique_column]==existing_data_df[unique_column],"leftanti").write.jdbc(
+            POSTGRES_URL,"rappel_conso","append",properties=POSTGRES_PROPERTIES
+        )
+    )).trigger(once=True).start()
+    return query.awaitTermination()
 def write_to_postgres():
-    pass
+    spark=create_spark_session()
+    df = create_initial_df()
+    df_final = create_final_df()
+    start_stream(df_final,spark=spark)
 
 if __name__ == "__main":
     write_to_postgres()
