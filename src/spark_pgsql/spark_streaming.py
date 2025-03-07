@@ -2,7 +2,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType,StructField,StringType
 from pyspark.sql.functions import col,from_json
 import logging
-from src.constants import DB_FIELDS
+from src.constants import DB_FIELDS,POSTGRES_URL,POSTGRES_PROPERTIES
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s:%(funcName)s:%(levelname)s:%(message)s")
 
