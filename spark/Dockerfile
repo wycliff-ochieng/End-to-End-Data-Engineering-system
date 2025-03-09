@@ -2,11 +2,11 @@ FROM bitnami/spark:latest
 
 WORKDIR /opt/bitnami/spark
 
-RUN pip install pyj4
+RUN pip install py4j
 
-COPY .src/spark_pgsql/spark_streaming.py ./spark_streaming.py
+COPY ./src/spark_pgsql/spark_streaming.py ./spark_streaming.py
 
-COPY .src/constants.py .src/constants.py
+COPY ./src/constants.py ./src/constants.py
 
 ENV POSTGRES_DOCKER_USER=host.docker.internal
 
