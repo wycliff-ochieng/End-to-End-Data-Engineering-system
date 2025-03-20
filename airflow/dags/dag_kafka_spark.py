@@ -1,7 +1,7 @@
 from airflow import Dag
 from datetime import timedelta,datetime
 from airflow.operators.python import PythonOperator
-from airflow.providers.ocker.operators.docker import 
+from airflow.providers.docker.operators.docker import DockerOperator
 
 start_date = datetime.today() - timedelta(days=1)
 
@@ -21,8 +21,10 @@ with Dag(
     
     kafka_stream_task = PythonOperator(
         task_id="kafka_data_stream",
-        python_callable=,
+        python_callable=stream,
         dag = dag
     )
 
-    spark_stream_task = DockerOperator()
+    spark_stream_task = DockerOperator(
+        task_id="spark_data_stream",
+    )
